@@ -1,5 +1,9 @@
 env/
 __pycache__/
-targers.txt
-config.py
+.vscode/
+
 *.log
+*.cfg
+
+targets.txt
+config.py
