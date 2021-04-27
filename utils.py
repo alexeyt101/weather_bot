@@ -1,5 +1,9 @@
+from random import choice
+
+from emoji import emojize
 import requests
 import pytaf
+from telegram import ReplyKeyboardMarkup
 
 import config
 
@@ -42,3 +46,14 @@ def process_weather_handlers(user_airport, weather_type):
     else:
         answer_to_user = 'Не удалось определить ICAO-код аэропорта'
     return answer_to_user
+
+
+def get_smile(user_data):
+    if 'emoji' not in user_data:
+        smile = choice(config.USER_EMOJI)
+        return emojize(smile, use_aliases=True)
+    return user_data['emoji']
+
+
+def create_main_keyboard():
+    return ReplyKeyboardMarkup([['Текущая погода', 'Прогноз погоды']])

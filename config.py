@@ -9,3 +9,5 @@ airports_icao_codes = {
     'внуково': 'UUWW',
     'пулково': 'ULLI',
 }
+
+USER_EMOJI = [':sunglasses:', ':smiling_imp:', ':alien:']

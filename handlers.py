@@ -1,4 +1,12 @@
-from utils import process_weather_handlers
+from utils import create_main_keyboard, get_smile, process_weather_handlers
+
+
+def greet_user(update, context):
+    context.user_data['emoji'] = get_smile(context.user_data)
+    update.message.reply_text(
+        f'Здравствуй, пользователь! {context.user_data["emoji"]}',
+        reply_markup=create_main_keyboard()
+    )
 
 
 def get_current_weather(update, context):
