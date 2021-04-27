@@ -19,13 +19,16 @@ def get_weather_data(url):
 
 
 def parse_weather_data(weather_data):
+    """
+    Нужно сделать так, чтобы строка для декодинга собиралась из данных по МЕТАРУ ИЛИ ТАФУ
+    Отдельно нужно вынести дату и время и строку для декодинга
+    """
     taf_position = weather_data.find('TAF')
     if taf_position >= 0:
-        # weather_datetime = weather_data[:taf_position + 1]
-        weather_data = weather_data[taf_position:].replace('\n', '')
+        weather_data = weather_data.split('TAF')[-1].replace('\n', '').split()
     else:
-        # weather_datetime = weather_data.split('\n')[0]
         weather_data = weather_data.split('\n')[1]
+    print(weather_data)
     t = pytaf.TAF(weather_data)
     d = pytaf.Decoder(t)
     decoded_weather = d.decode_taf()
@@ -39,8 +42,7 @@ def process_weather_handlers(user_airport, weather_type):
             config.BASE_URLS[weather_type].replace('<airport_ICAO_code>', airport_code)
         )
         if weather_data:
-            weather_data = parse_weather_data(weather_data)
-            answer_to_user = weather_data
+            answer_to_user = parse_weather_data(weather_data)
         else:
             answer_to_user = 'Сервис погоды временно недоступен'
     else:
@@ -56,4 +58,4 @@ def get_smile(user_data):
 
 
 def create_main_keyboard():
-    return ReplyKeyboardMarkup([['Текущая погода', 'Прогноз погоды']])
+    return ReplyKeyboardMarkup([['Получить погоду']])

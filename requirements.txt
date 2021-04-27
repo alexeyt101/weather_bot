@@ -1,6 +1,7 @@
 APScheduler==3.6.3
 certifi==2020.12.5
 chardet==4.0.0
+emoji==1.2.0
 flake8==3.9.1
 idna==2.10
 mccabe==0.6.1

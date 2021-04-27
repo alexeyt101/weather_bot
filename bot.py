@@ -4,8 +4,8 @@ import logging
 from dotenv import load_dotenv
 from telegram.ext import CommandHandler, ConversationHandler, Filters, MessageHandler, Updater
 
-import config
 from handlers import get_current_weather, get_weather_forecast, greet_user, talk_to_me
+from weather import choose_airport, choose_weather_type, get_weather, weather_dontknow
 
 load_dotenv()
 logging.basicConfig(filename='bot.log', level=logging.INFO)
@@ -16,10 +16,28 @@ def main():
 
     dp = my_bot.dispatcher
 
+    weather = ConversationHandler(
+            entry_points=[
+                MessageHandler(Filters.regex('^(Получить погоду)$'), choose_weather_type)
+            ],
+            states={
+                'choose_airport': [
+                    MessageHandler(
+                        Filters.regex('^(Текущая погода|Прогноз погоды)$'), choose_airport,
+                        ),
+                ],
+                'get_weather': [MessageHandler(Filters.text, get_weather)]
+            },
+            fallbacks=[
+                MessageHandler(
+                    Filters.text | Filters.photo | Filters.document | Filters.video |
+                    Filters.location, weather_dontknow
+                )
+            ]
+        )
+
+    dp.add_handler(weather)
     dp.add_handler(CommandHandler('start', greet_user))
-    dp.add_handler(CommandHandler('weather', get_current_weather))
-    dp.add_handler(CommandHandler('weather_forecast', get_weather_forecast))
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
     logging.info('Bot starts')
     my_bot.start_polling()
