@@ -19,20 +19,19 @@ def get_weather_data(url):
 
 
 def parse_weather_data(weather_data):
-    """
-    Нужно сделать так, чтобы строка для декодинга собиралась из данных по МЕТАРУ ИЛИ ТАФУ
-    Отдельно нужно вынести дату и время и строку для декодинга
-    """
-    taf_position = weather_data.find('TAF')
-    if taf_position >= 0:
-        weather_data = weather_data.split('TAF')[-1].replace('\n', '').split()
-    else:
-        weather_data = weather_data.split('\n')[1]
-    print(weather_data)
-    t = pytaf.TAF(weather_data)
-    d = pytaf.Decoder(t)
-    decoded_weather = d.decode_taf()
-    return decoded_weather
+    weather_words_list = []
+    weather_data = weather_data.replace('TAF', '').split('\n')
+    weather_datetime = weather_data[0]
+    weather_data = weather_data[1:]
+    for row in weather_data:
+        if not row:
+            continue
+        words_list = row.split()
+        for word in words_list:
+            if word:
+                weather_words_list.append(word)
+    weather_string_to_parse = ' '.join(weather_words_list)
+    return weather_string_to_parse
 
 
 def process_weather_handlers(user_airport, weather_type):
@@ -42,7 +41,10 @@ def process_weather_handlers(user_airport, weather_type):
             config.BASE_URLS[weather_type].replace('<airport_ICAO_code>', airport_code)
         )
         if weather_data:
-            answer_to_user = parse_weather_data(weather_data)
+            weather_string = parse_weather_data(weather_data)
+            weather_taf = pytaf.TAF(weather_string)
+            weather_decoder = pytaf.Decoder(weather_taf)
+            answer_to_user = weather_decoder.decode_taf()
         else:
             answer_to_user = 'Сервис погоды временно недоступен'
     else:

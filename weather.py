@@ -33,7 +33,7 @@ def get_weather(update, context):
     weather = process_weather_handlers(airport_name, weather_type)
     if weather:
         update.message.reply_text(
-            {weather},
+            weather,
             reply_markup=create_main_keyboard()
         )
         return ConversationHandler.END

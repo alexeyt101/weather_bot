@@ -4,7 +4,7 @@ import logging
 from dotenv import load_dotenv
 from telegram.ext import CommandHandler, ConversationHandler, Filters, MessageHandler, Updater
 
-from handlers import get_current_weather, get_weather_forecast, greet_user, talk_to_me
+from handlers import greet_user
 from weather import choose_airport, choose_weather_type, get_weather, weather_dontknow
 
 load_dotenv()
