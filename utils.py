@@ -21,7 +21,7 @@ def get_weather_data(url):
 def parse_weather_data(weather_data):
     weather_words_list = []
     weather_data = weather_data.replace('TAF', '').split('\n')
-    weather_datetime = weather_data[0]
+    # weather_datetime = weather_data[0]
     weather_data = weather_data[1:]
     for row in weather_data:
         if not row:
@@ -59,5 +59,7 @@ def get_smile(user_data):
     return user_data['emoji']
 
 
-def create_main_keyboard():
-    return ReplyKeyboardMarkup([['Получить погоду']])
+def create_keyboard(keyboard_type):
+    return ReplyKeyboardMarkup(
+        config.keyboards.get(keyboard_type)
+    )

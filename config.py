@@ -11,3 +11,13 @@ airports_icao_codes = {
 }
 
 USER_EMOJI = [':sunglasses:', ':smiling_imp:', ':alien:']
+
+
+keyboards = {
+        'main': [['Получить погоду']],
+        'weather_type': [['Текущая погода', 'Прогноз погоды']],
+        'airports': [
+            ['Шереметьево', 'Внуково'],
+            ['Домодедово', 'Пулково']
+        ],
+    }
