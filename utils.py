@@ -35,7 +35,7 @@ def parse_weather_data(weather_data):
 
 
 def process_weather_handlers(user_airport, weather_type):
-    airport_code = config.airports_icao_codes.get(user_airport)
+    airport_code = config.AIRPORT_ICAO_CODES.get(user_airport)
     if airport_code:
         weather_data = get_weather_data(
             config.BASE_URLS[weather_type].replace('<airport_ICAO_code>', airport_code)
@@ -61,5 +61,5 @@ def get_smile(user_data):
 
 def create_keyboard(keyboard_type):
     return ReplyKeyboardMarkup(
-        config.keyboards.get(keyboard_type)
+        config.KEYBOARDS.get(keyboard_type)
     )

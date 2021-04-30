@@ -1,9 +1,9 @@
 BASE_URLS = {
-    'текущая погода': 'https://tgftp.nws.noaa.gov/data/observations/metar/stations/<airport_ICAO_code>.TXT',
-    'прогноз погоды': 'https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/<airport_ICAO_code>.TXT'
+    'Текущая погода': 'https://tgftp.nws.noaa.gov/data/observations/metar/stations/<airport_ICAO_code>.TXT',
+    'Прогноз погоды': 'https://tgftp.nws.noaa.gov/data/forecasts/taf/stations/<airport_ICAO_code>.TXT'
 }
 
-airports_icao_codes = {
+AIRPORT_ICAO_CODES = {
     'шереметьево': 'UUEE',
     'домодедово': 'UUDD',
     'внуково': 'UUWW',
@@ -13,7 +13,7 @@ airports_icao_codes = {
 USER_EMOJI = [':sunglasses:', ':smiling_imp:', ':alien:']
 
 
-keyboards = {
+KEYBOARDS = {
         'main': [['Получить погоду']],
         'weather_type': [['Текущая погода', 'Прогноз погоды']],
         'airports': [

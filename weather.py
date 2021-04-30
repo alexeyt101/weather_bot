@@ -3,28 +3,30 @@ from telegram.ext import ConversationHandler
 
 from utils import create_keyboard, process_weather_handlers
 
-from config import airports_icao_codes
+from config import AIRPORT_ICAO_CODES, KEYBOARDS
 
 
 def choose_weather_type(update, context):
-    keyboard = [['Текущая погода', 'Прогноз погоды']]
     update.message.reply_text(
         'Выберете вид погоды',
-        reply_markup=ReplyKeyboardMarkup(keyboard)
+        reply_markup=create_keyboard('weather_type')
     )
     return 'choose_airport'
 
 
 def choose_airport(update, context):
-    user_weather_type = update.message.text.lower()
+    user_weather_type = update.message.text
+    if not user_weather_type or user_weather_type not in KEYBOARDS['weather_type'][0]:
+        update.message.reply_text(
+            'Выберите нужный тип погоды, используя клавиатуру',
+            reply_markup=create_keyboard('weather_type')
+        )
+        return 'choose_airport'
+ 
     context.user_data['weather'] = {'weather_type': user_weather_type}
-    keyboard = [
-        ['Шереметьево', 'Внуково'],
-        ['Домодедово', 'Пулково']
-    ]
     update.message.reply_text(
-        'Данные погоды почти готовы',
-        reply_markup=ReplyKeyboardMarkup(keyboard)
+        'Выберите ближайший аэропорт',
+        reply_markup=create_keyboard('airports')
     )
     return 'get_weather'
 
@@ -32,7 +34,7 @@ def choose_airport(update, context):
 def get_weather(update, context):
     weather_type = context.user_data['weather']['weather_type']
     airport_name = update.message.text.lower()
-    if not airport_name or airport_name not in airports_icao_codes.keys():
+    if not airport_name or airport_name not in AIRPORT_ICAO_CODES.keys():
         update.message.reply_text(
             'Не удалось определить ICAO-код аэропорта',
             reply_markup=create_keyboard('airports')
