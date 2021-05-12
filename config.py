@@ -21,3 +21,5 @@ KEYBOARDS = {
             ['Домодедово', 'Пулково']
         ],
     }
+
+USER_TIMEZONE = 'Europe/Moscow'
