@@ -1,3 +1,5 @@
+from datetime import datetime
+import pytz
 from random import choice
 
 from emoji import emojize
@@ -18,10 +20,12 @@ def get_weather_data(url):
         return False
 
 
-def parse_weather_data(weather_data):
+def parse_weather_data(weather_data, user_airport):
     weather_words_list = []
     weather_data = weather_data.replace('TAF', '').split('\n')
-    # weather_datetime = weather_data[0]
+    weather_datetime_utc_timezone = datetime.strptime(weather_data[0], '%Y/%m/%d %H:%M')
+    weather_datetime_airport_timezone = change_output_timezone(weather_datetime_utc_timezone, user_airport)
+    # print(f'UTC: {weather_datetime_utc_timezone}\nUTC+3: {weather_datetime_airport_timezone}')
     weather_data = weather_data[1:]
     for row in weather_data:
         if not row:
@@ -34,6 +38,21 @@ def parse_weather_data(weather_data):
     return weather_string_to_parse
 
 
+def change_output_timezone(datetime_utc, user_airport):
+    airport_timezone = None
+    utc_timezone = pytz.timezone('Etc/UTC')
+
+    datetime_utc = utc_timezone.localize(datetime_utc)
+
+    for timezone in config.AIRPORTS_TIMEZONE:
+        if user_airport in config.AIRPORTS_TIMEZONE[timezone]['airports']:
+            airport_timezone = config.AIRPORTS_TIMEZONE[timezone]['pytz_timezone']
+    airport_timezone = pytz.timezone(airport_timezone)
+    datetime_airport_timezone = datetime_utc.astimezone(airport_timezone)
+
+    return datetime_airport_timezone
+
+
 def process_weather_handlers(user_airport, weather_type):
     airport_code = config.AIRPORT_ICAO_CODES.get(user_airport)
     if airport_code:
@@ -41,7 +60,7 @@ def process_weather_handlers(user_airport, weather_type):
             config.BASE_URLS[weather_type].replace('<airport_ICAO_code>', airport_code)
         )
         if weather_data:
-            weather_string = parse_weather_data(weather_data)
+            weather_string = parse_weather_data(weather_data, user_airport)
             weather_taf = pytaf.TAF(weather_string)
             weather_decoder = pytaf.Decoder(weather_taf)
             answer_to_user = weather_decoder.decode_taf()

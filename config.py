@@ -10,6 +10,13 @@ AIRPORT_ICAO_CODES = {
     'пулково': 'ULLI',
 }
 
+AIRPORTS_TIMEZONE = {
+    'UTC+03': {
+        'pytz_timezone': 'Europe/Moscow',
+        'airports': ['шереметьево', 'домодедово', 'внуково', 'пулково'],
+    },
+}
+
 USER_EMOJI = [':sunglasses:', ':smiling_imp:', ':alien:']
 
 
