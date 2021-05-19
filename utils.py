@@ -10,7 +10,12 @@ from telegram import ReplyKeyboardMarkup
 import config
 
 
-def get_weather_data(url):
+def get_weather_data(url: str) -> str:
+    """
+    Функция, которая запрашивает данные у сервиса погоды и,
+    в случае успеха, возвращает данные в текстовом виде
+    """
+    
     try:
         weather_data = requests.get(url)
         weather_data.raise_for_status()
@@ -20,7 +25,13 @@ def get_weather_data(url):
         return False
 
 
-def parse_weather_data(weather_data, user_airport):
+def parse_weather_data(weather_data: str, user_airport: str) -> str:
+    """
+    Функция, которая принимает на вход строку погоды, полученную от сервиса погоды, 
+    а также название аэропорта выбранного пользователем. 
+    Возвращает очищенную от лишних пробелов и знаков переноса строку. 
+    """
+    
     weather_words_list = []
     weather_data = weather_data.replace('TAF', '').split('\n')
     weather_datetime_utc_timezone = datetime.strptime(weather_data[0], '%Y/%m/%d %H:%M')
@@ -35,10 +46,15 @@ def parse_weather_data(weather_data, user_airport):
             if word:
                 weather_words_list.append(word)
     weather_string_to_parse = ' '.join(weather_words_list)
-    return weather_string_to_parse
+    return weather_parsed_string
 
 
-def change_output_timezone(datetime_utc, user_airport):
+def change_output_timezone(datetime_utc: object, user_airport: str) -> object: 
+    """
+    Функция, которая принимает на вход объект datetime по UTC и
+    название аэропорта, а возвращает объект datetime с timezone аэропорта.
+    """
+    
     airport_timezone = None
     utc_timezone = pytz.timezone('Etc/UTC')
 
@@ -53,7 +69,13 @@ def change_output_timezone(datetime_utc, user_airport):
     return datetime_airport_timezone
 
 
-def process_weather_handlers(user_airport, weather_type):
+def process_weather_handlers(user_airport: str, weather_type: str) -> str:
+    """
+    Основная функция, которая принимает на вход название аэропорта и тип погоды,
+    производит запрос погоды, обработку ответа, декодирование строки с погодой, возвращает
+    ответ для пользователя (погода или сообщение об ошибке)
+    """
+
     airport_code = config.AIRPORT_ICAO_CODES.get(user_airport)
     if airport_code:
         weather_data = get_weather_data(
@@ -71,7 +93,12 @@ def process_weather_handlers(user_airport, weather_type):
     return answer_to_user
 
 
-def get_smile(user_data):
+def get_smile(user_data: dict) -> object:
+    """
+    Функция, которая возвращает смайлик для конкретного пользователя из user_data, если 
+    его там нет, то выбирает случайный из имеющегося набора смайлов
+    """
+
     if 'emoji' not in user_data:
         smile = choice(config.USER_EMOJI)
         return emojize(smile, use_aliases=True)

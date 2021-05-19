@@ -12,6 +12,11 @@ logging.basicConfig(filename='bot.log', level=logging.INFO)
 
 
 def main():
+    """
+    Основная функция бота, в которой определяются handler-ы и происходит инициализация бота
+
+    """
+
     my_bot = Updater(os.getenv('API_KEY'), use_context=True)
 
     dp = my_bot.dispatcher
